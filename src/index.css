@@ -4,15 +4,85 @@
 
 :root {
   --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
-  --bg-surface: #1a1a1a;
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #666666;
-  --accent-primary: #00ff9d;
-  --accent-secondary: #0066ff;
-  --accent-danger: #ff3366;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --bg-secondary: #0f0f11;
+  --bg-surface: #141416;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --border-color: rgba(255, 255, 255, 0.05);
+
+  /* Theme 1: Cyan Intelligence */
+  --theme-cyan: #00f2ff;
+  /* Theme 2: Amber Terminal */
+  --theme-amber: #ffb700;
+  /* Theme 3: Electric Violet */
+  --theme-violet: #bd00ff;
+  /* Theme 4: Stealth Minimal */
+  --theme-stealth: #ffffff;
+  /* Theme 5: Ruby Red */
+  --theme-ruby: #ff003c;
+  /* Theme 6: Emerald Green */
+  --theme-emerald: #00ff88;
+  /* Theme 7: Gold Rush */
+  --theme-gold: #ffd700;
+  /* Theme 8: Cobalt Blue */
+  --theme-cobalt: #2e5bff;
+  /* Theme 9: Neon Pink */
+  --theme-pink: #ff00d4;
+  /* Theme 10: Matrix Green */
+  --theme-matrix: #00ff41;
+  /* Theme 11: Lava Orange */
+  --theme-lava: #ff4d00;
+  /* Theme 12: Deep Purple */
+  --theme-purple: #7b00ff;
+}
+
+.theme-cyan {
+  --accent-primary: var(--theme-cyan);
+}
+
+.theme-amber {
+  --accent-primary: var(--theme-amber);
+}
+
+.theme-violet {
+  --accent-primary: var(--theme-violet);
+}
+
+.theme-stealth {
+  --accent-primary: var(--theme-stealth);
+}
+
+.theme-ruby {
+  --accent-primary: var(--theme-ruby);
+}
+
+.theme-emerald {
+  --accent-primary: var(--theme-emerald);
+}
+
+.theme-gold {
+  --accent-primary: var(--theme-gold);
+}
+
+.theme-cobalt {
+  --accent-primary: var(--theme-cobalt);
+}
+
+.theme-pink {
+  --accent-primary: var(--theme-pink);
+}
+
+.theme-matrix {
+  --accent-primary: var(--theme-matrix);
+}
+
+.theme-lava {
+  --accent-primary: var(--theme-lava);
+}
+
+.theme-purple {
+  --accent-primary: var(--theme-purple);
 }
 
 * {
@@ -29,7 +99,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  
+
   /* Mobile optimizations */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
