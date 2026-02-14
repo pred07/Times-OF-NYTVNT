@@ -12,6 +12,15 @@ import './index.css';
 // Color Groups with Intensities
 const colorGroups = [
   {
+    name: 'Sovereign',
+    base: '#00ffa3',
+    variants: [
+      { id: 'void-1', color: '#00ffa3', name: 'Operative', isGradient: true, gradient: 'linear-gradient(90deg, #00ffa3 0%, #45ffca 100%)' },
+      { id: 'void-2', color: '#ff0055', name: 'Void Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #ff0055 100%)' },
+      { id: 'void-3', color: '#45ffca', name: 'Ecosystem' },
+    ]
+  },
+  {
     name: 'Cyan',
     base: '#00f2ff',
     variants: [
@@ -87,8 +96,8 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('amber-1');
-  const [selectedGroup, setSelectedGroup] = useState(colorGroups[4]);
+  const [activeTheme, setActiveTheme] = useState('void-1');
+  const [selectedGroup, setSelectedGroup] = useState(colorGroups[0]);
 
   useEffect(() => {
     loadNews();
@@ -121,14 +130,23 @@ function App() {
 
   const categories = ['All', ...new Set(news.map(item => item.category))];
 
-  // Dynamically set accent color based on active theme
-  const getActiveColor = () => {
+  // Dynamically set accent color/gradient based on active theme
+  const getActiveThemeData = () => {
     const allVariants = colorGroups.flatMap(g => g.variants);
-    return allVariants.find(v => v.id === activeTheme)?.color || '#00f2ff';
+    const variant = allVariants.find(v => v.id === activeTheme) || allVariants[0];
+    return variant;
   };
 
+  const activeThemeData = getActiveThemeData();
+
   return (
-    <div className="min-h-screen bg-background text-text-main theme-custom transition-all duration-500" style={{ '--accent-primary': getActiveColor() }}>
+    <div
+      className="min-h-screen bg-background text-text-main theme-custom transition-all duration-500"
+      style={{
+        '--accent-primary': activeThemeData.color,
+        '--accent-gradient': activeThemeData.isGradient ? activeThemeData.gradient : activeThemeData.color
+      }}
+    >
       {/* Premium Theme Customizer Widget */}
       <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
         <AnimatePresence>
@@ -156,7 +174,7 @@ function App() {
                         key={group.name}
                         onClick={() => setSelectedGroup(group)}
                         className={`w-8 h-8 rounded-lg border-2 transition-all flex items-center justify-center ${selectedGroup.name === group.name ? 'border-white scale-110' : 'border-transparent opacity-40 hover:opacity-100 scale-90'}`}
-                        style={{ backgroundColor: group.base }}
+                        style={{ background: group.base }}
                       >
                         {selectedGroup.name === group.name && <div className="w-1 h-1 bg-white rounded-full" />}
                       </button>
@@ -178,7 +196,7 @@ function App() {
                         key={variant.id}
                         onClick={() => setActiveTheme(variant.id)}
                         className={`group relative flex-1 h-12 rounded-xl transition-all overflow-hidden ${activeTheme === variant.id ? 'ring-2 ring-white ring-offset-2 ring-offset-black scale-105 z-10' : 'opacity-60 hover:opacity-100 hover:scale-105'}`}
-                        style={{ backgroundColor: variant.color }}
+                        style={{ background: variant.isGradient ? variant.gradient : variant.color }}
                         title={variant.name}
                       >
                         <div className="absolute inset-x-0 bottom-0 p-1 bg-black/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
@@ -220,7 +238,7 @@ function App() {
               </div>
               <div>
                 <h1 className="text-xl font-orbitron font-black tracking-tighter leading-none">
-                  NYTVNT <span className="text-[var(--accent-primary)]">INTEL</span>
+                  NYTVNT <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'var(--accent-gradient)' }}>INTEL</span>
                 </h1>
                 <p className="text-[9px] font-rajdhani font-bold text-white/40 uppercase tracking-[0.3em]">
                   Secure Data Stream
@@ -340,9 +358,10 @@ function App() {
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`flex-none px-4 py-2 rounded-lg text-[10px] font-orbitron font-black uppercase tracking-widest border transition-all ${selectedCategory === category
-                  ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)]'
+                  ? 'text-black border-transparent shadow-[0_0_15px_rgba(var(--accent-primary),0.2)]'
                   : 'bg-surface/50 border-white/5 text-text-secondary hover:border-[var(--accent-primary)]/50'
                   }`}
+                style={selectedCategory === category ? { background: 'var(--accent-gradient)' } : {}}
               >
                 {category}
               </button>
@@ -389,7 +408,10 @@ function App() {
                 onClick={() => window.open(item.link, '_blank')}
               >
                 <div className="flex justify-between items-start mb-4">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-orbitron font-bold border border-[var(--accent-primary)] text-[var(--accent-primary)] bg-[var(--accent-primary)]/10">
+                  <span
+                    className="px-2 py-0.5 rounded text-[10px] font-orbitron font-bold border border-transparent text-black"
+                    style={{ background: 'var(--accent-gradient)' }}
+                  >
                     {item.category}
                   </span>
                   <div className="flex items-center gap-1 text-[10px] text-text-muted">
@@ -435,9 +457,9 @@ function App() {
             </div>
             <div className="relative z-10">
               <h2 className="text-4xl font-orbitron font-black uppercase tracking-tighter mb-4">
-                NETWORK <span className="text-[var(--accent-primary)]">ACCESS</span>
+                NETWORK <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'var(--accent-gradient)' }}>ACCESS</span>
               </h2>
-              <div className="w-20 h-1 bg-[var(--accent-primary)] mb-12" />
+              <div className="w-20 h-1 mb-12" style={{ background: 'var(--accent-gradient)' }} />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* LinkedIn / Follow Ops */}
@@ -456,7 +478,7 @@ function App() {
                       <TrendingUp className="text-[var(--accent-primary)]" size={24} />
                     </div>
                     <h3 className="text-2xl font-orbitron font-black uppercase tracking-tight mb-2">
-                      FOLLOW <span className="text-[var(--accent-primary)]">OPS</span>
+                      FOLLOW <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'var(--accent-gradient)' }}>OPS</span>
                     </h3>
                     <p className="text-text-secondary font-rajdhani font-bold text-sm tracking-widest uppercase mb-6 opacity-60">
                       Sovereign Intel Stream // LinkedIn Ops
@@ -484,7 +506,7 @@ function App() {
                       <Globe className="text-[var(--accent-primary)]" size={24} />
                     </div>
                     <h3 className="text-2xl font-orbitron font-black uppercase tracking-tight mb-2">
-                      DISCORD <span className="text-[var(--accent-primary)]">COMMS</span>
+                      DISCORD <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'var(--accent-gradient)' }}>COMMS</span>
                     </h3>
                     <p className="text-text-secondary font-rajdhani font-bold text-sm tracking-widest uppercase mb-6 opacity-60">
                       Encrypted Network // Global Intelligence
