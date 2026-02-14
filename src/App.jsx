@@ -15,7 +15,7 @@ const colorGroups = [
     name: 'Cyan',
     base: '#00f2ff',
     variants: [
-      { id: 'cyan-1', color: '#00f2ff', name: 'Ultra' },
+      { id: 'cyan-void', color: '#00f2ff', name: 'Neon Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #00f2ff 100%)' },
       { id: 'cyan-2', color: '#00d8e6', name: 'High' },
       { id: 'cyan-3', color: '#00bccc', name: 'Medium' },
       { id: 'cyan-4', color: '#008b99', name: 'Low' },
@@ -25,7 +25,7 @@ const colorGroups = [
     name: 'Blue',
     base: '#0055ff',
     variants: [
-      { id: 'blue-1', color: '#0055ff', name: 'Royal' },
+      { id: 'blue-void', color: '#0055ff', name: 'Deep Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #0055ff 100%)' },
       { id: 'blue-2', color: '#00b4ff', name: 'Sky' },
       { id: 'blue-3', color: '#2e5bff', name: 'Cobalt' },
       { id: 'blue-4', color: '#4b0082', name: 'Indigo' },
@@ -43,8 +43,10 @@ const colorGroups = [
   },
   {
     name: 'Green',
-    base: '#00ff41',
+    base: '#00ff88',
     variants: [
+      { id: 'green-official', color: '#00ff88', name: 'NYTVNT Intel', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #00ff88 100%)' },
+      { id: 'green-void', color: '#00ff41', name: 'Matrix Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #00ff41 100%)' },
       { id: 'green-1', color: '#00ff41', name: 'Matrix' },
       { id: 'green-2', color: '#00ff88', name: 'Emerald' },
       { id: 'green-3', color: '#22c55e', name: 'Forest' },
@@ -54,6 +56,7 @@ const colorGroups = [
     name: 'Amber',
     base: '#ffb700',
     variants: [
+      { id: 'amber-void', color: '#ffb700', name: 'Binary Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #ffb700 100%)' },
       { id: 'amber-1', color: '#ffb700', name: 'Terminal' },
       { id: 'amber-2', color: '#ffd700', name: 'Gold' },
       { id: 'amber-3', color: '#f59e0b', name: 'Amber' },
@@ -63,6 +66,7 @@ const colorGroups = [
     name: 'Violet',
     base: '#bd00ff',
     variants: [
+      { id: 'violet-void', color: '#bd00ff', name: 'Electric Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #bd00ff 100%)' },
       { id: 'violet-1', color: '#bd00ff', name: 'Electric' },
       { id: 'violet-2', color: '#7b00ff', name: 'Deep' },
       { id: 'violet-3', color: '#8b5cf6', name: 'Soft' },
@@ -72,6 +76,7 @@ const colorGroups = [
     name: 'Monochrome',
     base: '#ffffff',
     variants: [
+      { id: 'stealth-void', color: '#ffffff', name: 'Stealth Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #475569 0%, #ffffff 100%)' },
       { id: 'stealth', color: '#ffffff', name: 'Stealth' },
       { id: 'silver', color: '#94a3b8', name: 'Silver' },
       { id: 'slate', color: '#475569', name: 'Slate' },
@@ -88,8 +93,8 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('red-void');
-  const [selectedGroup, setSelectedGroup] = useState(colorGroups[2]); // Now Red is at index 2
+  const [activeTheme, setActiveTheme] = useState('green-official');
+  const [selectedGroup, setSelectedGroup] = useState(colorGroups[3]); // Now Green is at index 3
 
   useEffect(() => {
     loadNews();
