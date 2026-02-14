@@ -87,8 +87,8 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('cyan-1');
-  const [selectedGroup, setSelectedGroup] = useState(colorGroups[0]);
+  const [activeTheme, setActiveTheme] = useState('amber-1');
+  const [selectedGroup, setSelectedGroup] = useState(colorGroups[4]);
 
   useEffect(() => {
     loadNews();
