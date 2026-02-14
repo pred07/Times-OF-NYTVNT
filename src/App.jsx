@@ -226,18 +226,18 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo Section */}
-            <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="flex items-center gap-3 sm:gap-4 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <div className="relative">
-                <div className="w-10 h-10 bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 rounded flex items-center justify-center group-hover:border-[var(--accent-primary)] transition-all duration-500">
-                  <Shield size={20} className="text-[var(--accent-primary)]" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 rounded flex items-center justify-center group-hover:border-[var(--accent-primary)] transition-all duration-500">
+                  <Shield size={16} className="text-[var(--accent-primary)] sm:w-[20px]" />
                 </div>
                 <div className="absolute -inset-1 bg-[var(--accent-primary)]/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <div>
-                <h1 className="text-xl font-orbitron font-black tracking-tighter leading-none">
+              <div className="flex flex-col">
+                <h1 className="text-lg sm:text-xl font-orbitron font-black tracking-tighter leading-none">
                   NYTVNT <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'var(--accent-gradient)' }}>INTEL</span>
                 </h1>
-                <p className="text-[9px] font-rajdhani font-bold text-white/40 uppercase tracking-[0.3em]">
+                <p className="text-[7px] sm:text-[9px] font-rajdhani font-bold text-white/40 uppercase tracking-[0.2em] sm:tracking-[0.3em]">
                   Secure Data Stream
                 </p>
               </div>
@@ -301,12 +301,13 @@ function App() {
       </header>
 
       {/* Hero / Filter Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
-        <div className="flex flex-col md:flex-row gap-4 items-center">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 mb-8">
+        <div className="flex flex-row md:flex-row gap-3 items-center">
           {/* Expandable Search Icon */}
           <motion.div
-            animate={{ width: isSearchExpanded ? '280px' : '48px' }}
-            className={`relative flex items-center h-12 glass-effect rounded-2xl overflow-hidden border border-white/10 group ${isSearchExpanded ? 'bg-surface/90' : 'bg-surface/30 cursor-pointer hover:border-[var(--accent-primary)]/50'}`}
+            initial={false}
+            animate={{ width: isSearchExpanded ? '100%' : '48px', maxWidth: isSearchExpanded ? '400px' : '48px' }}
+            className={`relative flex items-center h-12 glass-effect rounded-2xl overflow-hidden border border-white/10 group ${isSearchExpanded ? 'bg-surface/90 shadow-[0_0_20px_rgba(0,0,0,0.3)] z-20' : 'bg-surface/30 cursor-pointer hover:border-[var(--accent-primary)]/50'}`}
             onClick={() => !isSearchExpanded && setIsSearchExpanded(true)}
           >
             <div className="flex items-center justify-center w-12 h-12 flex-shrink-0">
@@ -319,10 +320,10 @@ function App() {
             <AnimatePresence>
               {isSearchExpanded && (
                 <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="flex-1 flex items-center pr-4"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="flex-1 flex items-center pr-4 overflow-hidden"
                 >
                   <input
                     autoFocus
@@ -331,7 +332,7 @@ function App() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onBlur={() => !searchQuery && setIsSearchExpanded(false)}
-                    className="w-full bg-transparent border-none outline-none text-sm font-rajdhani text-text-main placeholder:text-text-muted/50"
+                    className="w-full bg-transparent border-none outline-none text-sm font-rajdhani text-text-main placeholder:text-text-muted/50 whitespace-nowrap"
                   />
                   <button
                     onClick={(e) => {
@@ -349,12 +350,12 @@ function App() {
           </motion.div>
 
           {/* Categories */}
-          <div className="flex-1 flex gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0 items-center">
+          <div className={`flex-1 flex gap-2 overflow-x-auto no-scrollbar pb-2 items-center transition-opacity duration-300 ${isSearchExpanded ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto' : 'opacity-100'}`}>
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`flex-none px-4 py-2 rounded-lg text-[10px] font-orbitron font-black uppercase tracking-widest border transition-all ${selectedCategory === category
+                className={`flex-none px-4 py-2 rounded-lg text-[9px] sm:text-[10px] font-orbitron font-black uppercase tracking-widest border transition-all ${selectedCategory === category
                   ? 'text-black border-transparent shadow-[0_0_15px_rgba(var(--accent-primary),0.2)]'
                   : 'bg-surface/50 border-white/5 text-text-secondary hover:border-[var(--accent-primary)]/50'
                   }`}
