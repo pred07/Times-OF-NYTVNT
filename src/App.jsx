@@ -12,15 +12,6 @@ import './index.css';
 // Color Groups with Intensities
 const colorGroups = [
   {
-    name: 'Sovereign',
-    base: '#00ffa3',
-    variants: [
-      { id: 'void-1', color: '#00ffa3', name: 'Operative', isGradient: true, gradient: 'linear-gradient(90deg, #00ffa3 0%, #45ffca 100%)' },
-      { id: 'void-2', color: '#ff0055', name: 'Void Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #ff0055 100%)' },
-      { id: 'void-3', color: '#45ffca', name: 'Ecosystem' },
-    ]
-  },
-  {
     name: 'Cyan',
     base: '#00f2ff',
     variants: [
@@ -44,6 +35,7 @@ const colorGroups = [
     name: 'Red',
     base: '#ff003c',
     variants: [
+      { id: 'red-void', color: '#ff0055', name: 'Void Pulse', isGradient: true, gradient: 'linear-gradient(90deg, #94a3b8 0%, #ff0055 100%)' },
       { id: 'red-1', color: '#ff003c', name: 'Ruby' },
       { id: 'red-2', color: '#ff4d00', name: 'Lava' },
       { id: 'red-3', color: '#e11d48', name: 'Rose' },
@@ -96,8 +88,8 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('void-1');
-  const [selectedGroup, setSelectedGroup] = useState(colorGroups[0]);
+  const [activeTheme, setActiveTheme] = useState('red-void');
+  const [selectedGroup, setSelectedGroup] = useState(colorGroups[2]); // Now Red is at index 2
 
   useEffect(() => {
     loadNews();
