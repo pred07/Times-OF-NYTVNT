@@ -85,7 +85,6 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLightMode, setIsLightMode] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [activeTheme, setActiveTheme] = useState('cyan-1');
@@ -93,23 +92,7 @@ function App() {
 
   useEffect(() => {
     loadNews();
-    // Check system preference
-    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-      // setIsLightMode(true); // Optional: default to system
-    }
   }, []);
-
-  useEffect(() => {
-    if (isLightMode) {
-      document.documentElement.classList.add('light-mode');
-    } else {
-      document.documentElement.classList.remove('light-mode');
-    }
-  }, [isLightMode]);
-
-  useEffect(() => {
-    document.body.className = isLightMode ? 'light-mode' : '';
-  }, [isLightMode]);
 
   useEffect(() => {
     filterNews();
@@ -145,7 +128,7 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-background text-text-main theme-custom transition-all duration-500 ${isLightMode ? 'light-mode' : ''}`} style={{ '--accent-primary': getActiveColor() }}>
+    <div className="min-h-screen bg-background text-text-main theme-custom transition-all duration-500" style={{ '--accent-primary': getActiveColor() }}>
       {/* Premium Theme Customizer Widget */}
       <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
         <AnimatePresence>
@@ -161,13 +144,6 @@ function App() {
                   <Palette className="text-[var(--accent-primary)]" size={20} />
                   <h3 className="text-xs font-orbitron font-black uppercase tracking-[0.2em]">Interface Kit</h3>
                 </div>
-                <button
-                  onClick={() => setIsLightMode(!isLightMode)}
-                  className="p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors"
-                  title={isLightMode ? "Switch to Dark" : "Switch to Light"}
-                >
-                  {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
-                </button>
               </div>
 
               {/* Main Color Groups */}
