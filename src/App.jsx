@@ -100,6 +100,14 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (isLightMode) {
+      document.documentElement.classList.add('light-mode');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+    }
+  }, [isLightMode]);
+
+  useEffect(() => {
     document.body.className = isLightMode ? 'light-mode' : '';
   }, [isLightMode]);
 
@@ -137,7 +145,7 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-background text-text-main theme-custom transition-colors duration-500`} style={{ '--accent-primary': getActiveColor() }}>
+    <div className={`min-h-screen bg-background text-text-main theme-custom transition-all duration-500 ${isLightMode ? 'light-mode' : ''}`} style={{ '--accent-primary': getActiveColor() }}>
       {/* Premium Theme Customizer Widget */}
       <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
         <AnimatePresence>
@@ -332,7 +340,7 @@ function App() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onBlur={() => !searchQuery && setIsSearchExpanded(false)}
-                    className="w-full bg-transparent border-none outline-none text-sm font-rajdhani text-white placeholder:text-white/20"
+                    className="w-full bg-transparent border-none outline-none text-sm font-rajdhani text-text-main placeholder:text-text-muted/50"
                   />
                   <button
                     onClick={(e) => {
