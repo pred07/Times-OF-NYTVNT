@@ -3,30 +3,80 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Globe, TrendingUp, Clock, ExternalLink, Search,
   Filter, Menu, X, ChevronRight, Newspaper, Shield,
-  AlertTriangle, Database, Zap, Eye, Share2
+  AlertTriangle, Database, Zap, Eye, Share2,
+  Settings, Moon, Sun, Palette
 } from 'lucide-react';
 import { fetchAllNews, formatTimeAgo } from './utils/newsService';
 import './index.css';
 
-// Category Icons
-const categoryIcons = {
-  'Threats & Attacks': AlertTriangle,
-  'Malware': Shield,
-  'Privacy & Compliance': Database,
-  'Security Updates': Zap,
-  'AI & Technology': Eye,
-  'Cyber Intelligence': Globe
-};
-
-// Category Colors
-const categoryColors = {
-  'Threats & Attacks': 'text-red-500',
-  'Malware': 'text-orange-500',
-  'Privacy & Compliance': 'text-blue-500',
-  'Security Updates': 'text-green-500',
-  'AI & Technology': 'text-purple-500',
-  'Cyber Intelligence': 'text-cyan-500'
-};
+// Color Groups with Intensities
+const colorGroups = [
+  {
+    name: 'Cyan',
+    base: '#00f2ff',
+    variants: [
+      { id: 'cyan-1', color: '#00f2ff', name: 'Ultra' },
+      { id: 'cyan-2', color: '#00d8e6', name: 'High' },
+      { id: 'cyan-3', color: '#00bccc', name: 'Medium' },
+      { id: 'cyan-4', color: '#008b99', name: 'Low' },
+    ]
+  },
+  {
+    name: 'Blue',
+    base: '#0055ff',
+    variants: [
+      { id: 'blue-1', color: '#0055ff', name: 'Royal' },
+      { id: 'blue-2', color: '#00b4ff', name: 'Sky' },
+      { id: 'blue-3', color: '#2e5bff', name: 'Cobalt' },
+      { id: 'blue-4', color: '#4b0082', name: 'Indigo' },
+    ]
+  },
+  {
+    name: 'Red',
+    base: '#ff003c',
+    variants: [
+      { id: 'red-1', color: '#ff003c', name: 'Ruby' },
+      { id: 'red-2', color: '#ff4d00', name: 'Lava' },
+      { id: 'red-3', color: '#e11d48', name: 'Rose' },
+    ]
+  },
+  {
+    name: 'Green',
+    base: '#00ff41',
+    variants: [
+      { id: 'green-1', color: '#00ff41', name: 'Matrix' },
+      { id: 'green-2', color: '#00ff88', name: 'Emerald' },
+      { id: 'green-3', color: '#22c55e', name: 'Forest' },
+    ]
+  },
+  {
+    name: 'Amber',
+    base: '#ffb700',
+    variants: [
+      { id: 'amber-1', color: '#ffb700', name: 'Terminal' },
+      { id: 'amber-2', color: '#ffd700', name: 'Gold' },
+      { id: 'amber-3', color: '#f59e0b', name: 'Amber' },
+    ]
+  },
+  {
+    name: 'Violet',
+    base: '#bd00ff',
+    variants: [
+      { id: 'violet-1', color: '#bd00ff', name: 'Electric' },
+      { id: 'violet-2', color: '#7b00ff', name: 'Deep' },
+      { id: 'violet-3', color: '#8b5cf6', name: 'Soft' },
+    ]
+  },
+  {
+    name: 'Monochrome',
+    base: '#ffffff',
+    variants: [
+      { id: 'stealth', color: '#ffffff', name: 'Stealth' },
+      { id: 'silver', color: '#94a3b8', name: 'Silver' },
+      { id: 'slate', color: '#475569', name: 'Slate' },
+    ]
+  }
+];
 
 function App() {
   const [news, setNews] = useState([]);
@@ -35,26 +85,23 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeTheme, setActiveTheme] = useState('cyan'); // Default for testing
-
-  const themes = [
-    { id: 'cyan', name: 'Intelligence Cyan', color: '#00f2ff' },
-    { id: 'amber', name: 'Amber Terminal', color: '#ffb700' },
-    { id: 'violet', name: 'Electric Violet', color: '#bd00ff' },
-    { id: 'stealth', name: 'Stealth Minimal', color: '#ffffff' },
-    { id: 'ruby', name: 'Ruby Red', color: '#ff003c' },
-    { id: 'emerald', name: 'Emerald Green', color: '#00ff88' },
-    { id: 'gold', name: 'Gold Rush', color: '#ffd700' },
-    { id: 'cobalt', name: 'Cobalt Blue', color: '#2e5bff' },
-    { id: 'pink', name: 'Neon Pink', color: '#ff00d4' },
-    { id: 'matrix', name: 'Matrix Green', color: '#00ff41' },
-    { id: 'lava', name: 'Lava Orange', color: '#ff4d00' },
-    { id: 'purple', name: 'Deep Purple', color: '#7b00ff' }
-  ];
+  const [isLightMode, setIsLightMode] = useState(false);
+  const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [activeTheme, setActiveTheme] = useState('cyan-1');
+  const [selectedGroup, setSelectedGroup] = useState(colorGroups[0]);
 
   useEffect(() => {
     loadNews();
+    // Check system preference
+    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      // setIsLightMode(true); // Optional: default to system
+    }
   }, []);
+
+  useEffect(() => {
+    document.body.className = isLightMode ? 'light-mode' : '';
+  }, [isLightMode]);
 
   useEffect(() => {
     filterNews();
@@ -69,48 +116,110 @@ function App() {
 
   const filterNews = () => {
     let filtered = news;
-
-    // Filter by category
     if (selectedCategory !== 'All') {
       filtered = filtered.filter(item => item.category === selectedCategory);
     }
-
-    // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(item =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.snippet.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
     setFilteredNews(filtered);
   };
 
   const categories = ['All', ...new Set(news.map(item => item.category))];
 
+  // Dynamically set accent color based on active theme
+  const getActiveColor = () => {
+    const allVariants = colorGroups.flatMap(g => g.variants);
+    return allVariants.find(v => v.id === activeTheme)?.color || '#00f2ff';
+  };
+
   return (
-    <div className={`min-h-screen bg-background text-text-main theme-${activeTheme}`}>
-      {/* Theme Switcher - Temporary for Approval */}
-      <div className="fixed bottom-8 right-8 z-[100] flex flex-col gap-3 p-4 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl max-w-[280px]">
-        <div className="flex flex-col gap-1">
-          <p className="text-[10px] font-orbitron font-bold text-white/40 uppercase tracking-widest text-center">
-            Test New Highlight Themes
-          </p>
-          <p className="text-[8px] font-rajdhani text-white/20 text-center uppercase tracking-widest">
-            Select high-impact highlights
-          </p>
-        </div>
-        <div className="grid grid-cols-4 gap-3">
-          {themes.map(theme => (
-            <button
-              key={theme.id}
-              onClick={() => setActiveTheme(theme.id)}
-              style={{ backgroundColor: theme.color }}
-              className={`w-10 h-10 rounded-full border-2 transition-all ${activeTheme === theme.id ? 'border-white scale-110 shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'border-transparent opacity-50 hover:opacity-100'}`}
-              title={theme.name}
-            />
-          ))}
-        </div>
+    <div className={`min-h-screen bg-background text-text-main theme-custom transition-colors duration-500`} style={{ '--accent-primary': getActiveColor() }}>
+      {/* Premium Theme Customizer Widget */}
+      <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end">
+        <AnimatePresence>
+          {isCustomizerOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="mb-4 p-6 bg-surface/90 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-[320px] overflow-hidden"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-2">
+                  <Palette className="text-[var(--accent-primary)]" size={20} />
+                  <h3 className="text-xs font-orbitron font-black uppercase tracking-[0.2em]">Interface Kit</h3>
+                </div>
+                <button
+                  onClick={() => setIsLightMode(!isLightMode)}
+                  className="p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors"
+                  title={isLightMode ? "Switch to Dark" : "Switch to Light"}
+                >
+                  {isLightMode ? <Moon size={18} /> : <Sun size={18} />}
+                </button>
+              </div>
+
+              {/* Main Color Groups */}
+              <div className="space-y-6">
+                <div>
+                  <label className="text-[9px] font-rajdhani font-bold text-white/40 uppercase tracking-widest block mb-3">Primary Hue</label>
+                  <div className="grid grid-cols-7 gap-2">
+                    {colorGroups.map(group => (
+                      <button
+                        key={group.name}
+                        onClick={() => setSelectedGroup(group)}
+                        className={`w-8 h-8 rounded-lg border-2 transition-all flex items-center justify-center ${selectedGroup.name === group.name ? 'border-white scale-110' : 'border-transparent opacity-40 hover:opacity-100 scale-90'}`}
+                        style={{ backgroundColor: group.base }}
+                      >
+                        {selectedGroup.name === group.name && <div className="w-1 h-1 bg-white rounded-full" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Intensity Selection */}
+                <motion.div
+                  key={selectedGroup.name}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="pt-4 border-t border-white/5"
+                >
+                  <label className="text-[9px] font-rajdhani font-bold text-white/40 uppercase tracking-widest block mb-4">Intensity Spectrum</label>
+                  <div className="flex gap-2">
+                    {selectedGroup.variants.map(variant => (
+                      <button
+                        key={variant.id}
+                        onClick={() => setActiveTheme(variant.id)}
+                        className={`group relative flex-1 h-12 rounded-xl transition-all overflow-hidden ${activeTheme === variant.id ? 'ring-2 ring-white ring-offset-2 ring-offset-black scale-105 z-10' : 'opacity-60 hover:opacity-100 hover:scale-105'}`}
+                        style={{ backgroundColor: variant.color }}
+                        title={variant.name}
+                      >
+                        <div className="absolute inset-x-0 bottom-0 p-1 bg-black/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                          <p className="text-[7px] font-orbitron font-bold text-white text-center truncate">{variant.name}</p>
+                        </div>
+                        {activeTheme === variant.id && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_white]" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <button
+          onClick={() => setIsCustomizerOpen(!isCustomizerOpen)}
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isCustomizerOpen ? 'bg-white text-black rotate-90' : 'bg-[var(--accent-primary)] text-black hover:scale-110 shadow-[0_0_20px_rgba(var(--accent-primary),0.3)]'}`}
+        >
+          {isCustomizerOpen ? <X size={24} /> : <Settings size={24} className="animate-spin-slow" />}
+        </button>
       </div>
 
       {/* Header */}
@@ -127,7 +236,7 @@ function App() {
               </div>
               <div>
                 <h1 className="text-xl font-orbitron font-black tracking-tighter leading-none">
-                  NYTVNT<span className="text-[var(--accent-primary)]">.INTEL</span>
+                  NYTVNT <span className="text-[var(--accent-primary)]">INTEL</span>
                 </h1>
                 <p className="text-[9px] font-rajdhani font-bold text-white/40 uppercase tracking-[0.3em]">
                   Secure Data Stream
@@ -137,24 +246,19 @@ function App() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8 text-[11px] font-orbitron font-bold uppercase tracking-widest text-text-secondary">
-              <a href="#" className="hover:text-[var(--accent-primary)] transition-colors relative group">
+              <a href="#" className="hover:text-[var(--accent-primary)] transition-colors relative group" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                 Live Feed
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--accent-primary)] transition-all group-hover:w-full" />
               </a>
-              <a href="#" className="hover:text-[var(--accent-primary)] transition-colors relative group">
-                Trending
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--accent-primary)] transition-all group-hover:w-full" />
-              </a>
-              <a href="#" className="hover:text-[var(--accent-primary)] transition-colors relative group">
-                Archives
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--accent-primary)] transition-all group-hover:w-full" />
-              </a>
-              <a href="#network-access" className="hover:text-[var(--accent-primary)] transition-colors relative group">
+              <a href="#network-access" className="hover:text-[var(--accent-primary)] transition-colors relative group" onClick={(e) => { e.preventDefault(); document.getElementById('network-access')?.scrollIntoView({ behavior: 'smooth' }); }}>
                 Access
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--accent-primary)] transition-all group-hover:w-full" />
               </a>
               <div className="h-4 w-[1px] bg-white/10 mx-2" />
-              <button className="px-5 py-2 bg-[var(--accent-primary)] text-black text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(var(--accent-primary),0.3)]">
+              <button
+                onClick={() => window.open('https://www.amylucia.com/', '_blank')}
+                className="px-5 py-2 bg-[var(--accent-primary)] text-black text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(var(--accent-primary),0.3)]"
+              >
                 Access Terminal
               </button>
             </nav>
@@ -179,19 +283,16 @@ function App() {
               className="lg:hidden border-t border-white/5 bg-background overflow-hidden"
             >
               <nav className="px-4 py-6 flex flex-col gap-4">
-                <a href="#" className="text-xs font-orbitron font-bold uppercase tracking-widest p-2 hover:text-[var(--accent-primary)] transition-colors">
+                <a href="#" className="text-xs font-orbitron font-bold uppercase tracking-widest p-2 hover:text-[var(--accent-primary)] transition-colors" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>
                   Live Feed
                 </a>
-                <a href="#" className="text-xs font-orbitron font-bold uppercase tracking-widest p-2 hover:text-[var(--accent-primary)] transition-colors">
-                  Trending
-                </a>
-                <a href="#" className="text-xs font-orbitron font-bold uppercase tracking-widest p-2 hover:text-[var(--accent-primary)] transition-colors">
-                  Archives
-                </a>
-                <a href="#network-access" className="text-xs font-orbitron font-bold uppercase tracking-widest p-2 hover:text-[var(--accent-primary)] transition-colors">
+                <a href="#network-access" className="text-xs font-orbitron font-bold uppercase tracking-widest p-2 hover:text-[var(--accent-primary)] transition-colors" onClick={(e) => { e.preventDefault(); document.getElementById('network-access')?.scrollIntoView({ behavior: 'smooth' }); setMobileMenuOpen(false); }}>
                   Access
                 </a>
-                <button className="w-full mt-2 px-5 py-3 bg-[var(--accent-primary)] text-black text-[10px] font-bold uppercase tracking-widest">
+                <button
+                  onClick={() => { window.open('https://www.amylucia.com/', '_blank'); setMobileMenuOpen(false); }}
+                  className="w-full mt-2 px-5 py-3 bg-[var(--accent-primary)] text-black text-[10px] font-bold uppercase tracking-widest"
+                >
                   Access Terminal
                 </button>
               </nav>
@@ -202,23 +303,59 @@ function App() {
 
       {/* Hero / Filter Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
-        <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
-          <div className="flex-1 w-full relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={16} />
-            <input
-              type="text"
-              placeholder="SEARCH DATA STREAM..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-surface/50 border border-white/5 rounded-xl px-12 py-3 text-sm focus:outline-none focus:border-[var(--accent-primary)] transition-all font-rajdhani tracking-widest"
-            />
-          </div>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          {/* Expandable Search Icon */}
+          <motion.div
+            animate={{ width: isSearchExpanded ? '280px' : '48px' }}
+            className={`relative flex items-center h-12 glass-effect rounded-2xl overflow-hidden border border-white/10 group ${isSearchExpanded ? 'bg-surface/90' : 'bg-surface/30 cursor-pointer hover:border-[var(--accent-primary)]/50'}`}
+            onClick={() => !isSearchExpanded && setIsSearchExpanded(true)}
+          >
+            <div className="flex items-center justify-center w-12 h-12 flex-shrink-0">
+              <Search
+                size={18}
+                className={`transition-colors duration-300 ${isSearchExpanded ? 'text-[var(--accent-primary)]' : 'text-text-muted group-hover:text-[var(--accent-primary)]'}`}
+              />
+            </div>
+
+            <AnimatePresence>
+              {isSearchExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className="flex-1 flex items-center pr-4"
+                >
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="Search intelligence..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onBlur={() => !searchQuery && setIsSearchExpanded(false)}
+                    className="w-full bg-transparent border-none outline-none text-sm font-rajdhani text-white placeholder:text-white/20"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSearchQuery('');
+                      setIsSearchExpanded(false);
+                    }}
+                    className="p-1 hover:bg-white/5 rounded-md transition-colors"
+                  >
+                    <X size={14} className="text-white/40" />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Categories */}
+          <div className="flex-1 flex gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0 items-center">
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg text-[10px] font-orbitron font-black uppercase tracking-widest border transition-all ${selectedCategory === category
+                className={`flex-none px-4 py-2 rounded-lg text-[10px] font-orbitron font-black uppercase tracking-widest border transition-all ${selectedCategory === category
                   ? 'bg-[var(--accent-primary)] text-black border-[var(--accent-primary)]'
                   : 'bg-surface/50 border-white/5 text-text-secondary hover:border-[var(--accent-primary)]/50'
                   }`}
@@ -231,7 +368,7 @@ function App() {
       </section>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main id="feed-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search & Filters */}
         {/* The previous search and filter section was replaced by the new Hero/Filter Section above */}
 
@@ -281,7 +418,7 @@ function App() {
                   {item.title}
                 </h3>
 
-                <p className="text-xs text-text-secondary line-clamp-2 mb-4">
+                <p className="text-xs text-text-secondary line-clamp-5 mb-4 leading-relaxed">
                   {item.snippet}
                 </p>
 
@@ -387,7 +524,7 @@ function App() {
             <div className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-primary" />
               <span className="text-sm font-mono text-muted">
-                © 2026 Times of NYTVNT. All rights reserved.
+                © 2026 Project NYTVNT Intel. All rights reserved.
               </span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted">

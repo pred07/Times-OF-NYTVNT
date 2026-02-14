@@ -4,7 +4,10 @@ export const RSS_FEEDS = [
     { key: "Bleeping Computer", url: "https://www.bleepingcomputer.com/feed/" },
     { key: "Krebs on Security", url: "https://krebsonsecurity.com/feed/" },
     { key: "Dark Reading", url: "https://www.darkreading.com/rss.xml" },
-    { key: "SecurityWeek", url: "https://www.securityweek.com/feed/" }
+    { key: "SecurityWeek", url: "https://www.securityweek.com/feed/" },
+    { key: "CyberScoop", url: "https://www.cyberscoop.com/feed/" },
+    { key: "Infosecurity Magazine", url: "https://www.infosecurity-magazine.com/rss/news/" },
+    { key: "Ars Technica", url: "https://feeds.arstechnica.com/arstechnica/security" }
 ];
 
 // Use rss2json service for client-side RSS parsing

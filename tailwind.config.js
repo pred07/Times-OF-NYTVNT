@@ -7,14 +7,13 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#00ff9d',
-                secondary: '#0066ff',
-                accent: '#ff3366',
-                background: '#0a0a0a',
-                surface: '#1a1a1a',
-                'text-main': '#ffffff',
-                'text-secondary': '#a0a0a0',
-                muted: '#666666',
+                primary: 'var(--accent-primary)',
+                secondary: 'var(--accent-secondary)',
+                background: 'var(--bg-primary)',
+                surface: 'var(--bg-surface)',
+                'text-main': 'var(--text-primary)',
+                'text-secondary': 'var(--text-secondary)',
+                muted: 'var(--text-muted)',
             },
             fontFamily: {
                 inter: ['Inter', 'sans-serif'],

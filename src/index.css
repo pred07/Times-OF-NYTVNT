@@ -10,8 +10,9 @@
   --text-secondary: #94a3b8;
   --text-muted: #475569;
   --border-color: rgba(255, 255, 255, 0.05);
+  --transition-speed: 0.4s;
 
-  /* Theme 1: Cyan Intelligence */
+  /* Theme Colors */
   --theme-cyan: #00f2ff;
   /* Theme 2: Amber Terminal */
   --theme-amber: #ffb700;
@@ -35,6 +36,13 @@
   --theme-lava: #ff4d00;
   /* Theme 12: Deep Purple */
   --theme-purple: #7b00ff;
+  /* Blue Variations */
+  --theme-sky: #00b4ff;
+  --theme-ocean: #0055ff;
+  --theme-aqua: #00ffff;
+  --theme-cerulean: #2a52be;
+  --theme-steel: #4682b4;
+  --theme-indigo: #4b0082;
 }
 
 .theme-cyan {
@@ -85,6 +93,105 @@
   --accent-primary: var(--theme-purple);
 }
 
+.theme-sky {
+  --accent-primary: var(--theme-sky);
+}
+
+.theme-ocean {
+  --accent-primary: var(--theme-ocean);
+}
+
+.theme-aqua {
+  --accent-primary: var(--theme-aqua);
+}
+
+.theme-cerulean {
+  --accent-primary: var(--theme-cerulean);
+}
+
+.theme-steel {
+  --accent-primary: var(--theme-steel);
+}
+
+.theme-indigo {
+  --accent-primary: var(--theme-indigo);
+  --accent-secondary: var(--accent-primary);
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* Light Mode Overrides */
+.light-mode {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-surface: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-color: rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .bg-surface\/30 {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.light-mode .bg-surface\/50 {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.light-mode .bg-black\/80 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.light-mode .bg-surface\/90 {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.light-mode .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.light-mode .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .text-white\/40 {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.light-mode .text-white\/20 {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.light-mode .text-white {
+  color: #0f172a;
+}
+
+.light-mode .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -99,6 +206,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 
   /* Mobile optimizations */
   -webkit-tap-highlight-color: transparent;
@@ -132,6 +240,11 @@ body {
 
 .font-inter {
   font-family: 'Inter', sans-serif;
+}
+
+input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 
 /* Custom Scrollbar */
@@ -210,6 +323,7 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
+  transition: all var(--transition-speed) ease;
 }
 
 /* Hover Glow */
@@ -237,7 +351,7 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease;
 }
 
 a:hover {
